@@ -14,10 +14,13 @@ const login = async (req, res, next) => {
     if (!user) {
       throw createError(401, 'Email not found');
     }
-    //   const comparePassword = await bcrypt.compare(password, user.password);
+
     const comparePassword = await user.validatePassword(password);
     if (!comparePassword) {
       throw createError(401, 'Password wrong');
+    }
+    if (!user.verify) {
+      throw createError(400, 'Email not verify');
     }
     const payload = {
       id: user._id,
